@@ -134,6 +134,66 @@ function calculateScores(){
     }
     let score_all = score_run * 0.2 + score_50m * 0.2 + score_up * 0.1 + score_jump * 0.1 +score_vital * 0.15 + score_reach * 0.1 + score_bmi * 0.15
     outputElement.textContent = `${score_all}`;
+    saveFormData();
+}
+
+// 将表单数据保存到cookie中
+function saveFormData() {
+    const expirationDays = 7;
+    const gender = document.getElementById("gender").value;
+    const height = document.getElementById("height").value;
+    const weight = document.getElementById("weight").value;
+    const score50m = document.getElementById("score50m").value;
+    const scoreLongJump = document.getElementById("scoreLongJump").value;
+    const scoreSitReach = document.getElementById("scoreSitReach").value;
+    const scoreVitalCapacity = document.getElementById("scoreVitalCapacity").value;
+    const scoreRun = document.getElementById("scoreRun").value;
+    const scorePullUp = document.getElementById("scorePullUp").value;
+
+    // 创建一个有效期的cookie
+    const expirationDate = new Date();
+    expirationDate.setTime(expirationDate.getTime() + (expirationDays * 24 * 60 * 60 * 1000));
+    const expires = "expires=" + expirationDate.toUTCString();
+
+    // 将每个表单数据存储为cookie
+    document.cookie = "gender=" + gender + ";" + expires + ";path=/";
+    document.cookie = "height=" + height + ";" + expires + ";path=/";
+    document.cookie = "weight=" + weight + ";" + expires + ";path=/";
+    document.cookie = "score50m=" + score50m + ";" + expires + ";path=/";
+    document.cookie = "scoreLongJump=" + scoreLongJump + ";" + expires + ";path=/";
+    document.cookie = "scoreSitReach=" + scoreSitReach + ";" + expires + ";path=/";
+    document.cookie = "scoreVitalCapacity=" + scoreVitalCapacity + ";" + expires + ";path=/";
+    document.cookie = "scoreRun=" + scoreRun + ";" + expires + ";path=/";
+    document.cookie = "scorePullUp=" + scorePullUp + ";" + expires + ";path=/";
+}
+
+// 读取cookie并将值加载到表单
+function loadFormData() {
+    const cookies = document.cookie.split("; ");
+    const cookieObject = {};
+
+    // 将每个cookie转换为键值对存储到对象中
+    cookies.forEach(cookie => {
+        const [key, value] = cookie.split("=");
+        cookieObject[key] = decodeURIComponent(value);
+    });
+
+    // 填充表单值
+    if (cookieObject.gender) document.getElementById("gender").value = cookieObject.gender;
+    if (cookieObject.height) document.getElementById("height").value = cookieObject.height;
+    if (cookieObject.weight) document.getElementById("weight").value = cookieObject.weight;
+    if (cookieObject.score50m) document.getElementById("score50m").value = cookieObject.score50m;
+    if (cookieObject.scoreLongJump) document.getElementById("scoreLongJump").value = cookieObject.scoreLongJump;
+    if (cookieObject.scoreSitReach) document.getElementById("scoreSitReach").value = cookieObject.scoreSitReach;
+    if (cookieObject.scoreVitalCapacity) document.getElementById("scoreVitalCapacity").value = cookieObject.scoreVitalCapacity;
+    if (cookieObject.scoreRun) document.getElementById("scoreRun").value = cookieObject.scoreRun;
+    if (cookieObject.scorePullUp) document.getElementById("scorePullUp").value = cookieObject.scorePullUp;
 }
 
 loadJSON();
+// 页面加载时自动读取数据
+window.onload = function() {
+    loadFormData();
+    calculateBMI();
+    calculateScores();
+};
