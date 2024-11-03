@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="scripts.js"></script>
+    <title>体测助手</title>
+    <style>
+        /* 基础样式 */
+        body {
+            font-family: Helvetica, Arial, sans-serif, "PingFang SC", "Microsoft YaHei";
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        /* 信息卡片样式 */
+        .info-cards {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        .info-card {
+            flex: 1;
+            background-color: #e7f1ff;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .info-card h3 {
+            margin: 0;
+            height: 30px;
+            color: #007bff;
+            font-size: 1.1em;
+        }
+        .info-card span {
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 35px;
+            color: #333;
+        }
+
+        /* 输入框和选择框 */
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 1px solid #d1d1d1;
+            border-radius: 10px;
+            background-color: #f7f7f7;
+            font-size: 1em;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        /* 标签和标题 */
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+            color: #555;
+            font-size: 1.1em;
+        }
+        h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+
+        /* 每项信息卡片 */
+        .card {
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f9f9f9;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 项目得分胶囊样式 */
+        .score-capsule {
+            display: inline-flex;
+            align-items: center;
+            background-color: #007bff;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .score-capsule span {
+            margin-right: 3px;
+        }
+
+        /* 输入得分项目的布局 */
+        .item_cards {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* 按钮样式 */
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>体测助手</h1>
+
+    <!-- Display user's basic info -->
+    <div class="info-cards">
+        <div class="info-card">
+            <h3>性别</h3>
+            <span id="genderDisplay">男</span>
+        </div>
+        <div class="info-card">
+            <h3>BMI</h3>
+            <span id="bmiResult">0</span>
+        </div>
+        <div class="info-card">
+            <h3>总成绩</h3>
+            <span id="totalScore">0</span>
+        </div>
+    </div>
+
+    <!-- Gender Selection -->
+    <div class="card">
+        <label for="gender">性别:</label>
+        <select id="gender" onchange="calculateScores()">
+            <option value="male">男</option>
+            <option value="female">女</option>
+        </select>
+    </div>
+
+    <!-- Height Input -->
+    <div class="card">
+        <label for="height">身高 (cm):</label>
+        <input type="number" id="height" oninput="calculateBMI()" />
+    </div>
+
+    <!-- Weight Input -->
+    <div class="card">
+        <label for="weight">体重 (kg):</label>
+        <input type="number" id="weight" oninput="calculateBMI()" />
+    </div>
+
+    <!-- Score Inputs -->
+    <div class="card">
+        <div class="item_cards">
+            <label for="score50m">50m成绩:</label>
+            <div class="score-capsule">
+                <span id="output50m">0.0</span> 分
+            </div>
+        </div>
+        <input type="number" id="score50m" oninput="calculateScores()" />
+    </div>
+
+    <div class="card">
+        <div class="item_cards">
+            <label for="scoreLongJump">跳远成绩:</label>
+            <div class="score-capsule">
+                <span id="outputjump">0.0</span> 分
+            </div>
+        </div>
+        <input type="number" id="scoreLongJump" oninput="calculateScores()" />
+    </div>
+
+    <div class="card">
+        <div class="item_cards">
+            <label for="scoreSitReach">坐位体前屈成绩:</label>
+            <div class="score-capsule">
+                <span id="outputreach">0.0</span> 分
+            </div>
+        </div>
+        <input type="number" id="scoreSitReach" oninput="calculateScores()" />
+    </div>
+
+    <div class="card">
+        <div class="item_cards">
+            <label for="scoreVitalCapacity">肺活量:</label>
+            <div class="score-capsule">
+                <span id="outputvital">0.0</span> 分
+            </div>
+        </div>
+        <input type="number" id="scoreVitalCapacity" oninput="calculateScores()" />
+    </div>
+
+    <div class="card">
+        <div class="item_cards">
+            <label for="scoreRun">1000m / 800m成绩:</label>
+            <div class="score-capsule">
+                <span id="outputrun">0.0</span> 分
+            </div>
+        </div>
+        <input type="number" id="scoreRun" oninput="calculateScores()" />
+    </div>
+
+    <div class="card">
+        <div class="item_cards">
+            <label for="scorePullUp">引体向上 / 仰卧起坐成绩:</label>
+            <div class="score-capsule">
+                <span id="outputup">0.0</span> 分
+            </div>
+        </div>
+        <input type="number" id="scorePullUp" oninput="calculateScores()" />
+    </div>
+
+</div>
+
+</body>
+</html>
