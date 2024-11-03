@@ -190,9 +190,11 @@ function loadFormData() {
     if (cookieObject.scorePullUp) document.getElementById("scorePullUp").value = cookieObject.scorePullUp;
 }
 
-loadJSON();
+loadJSON()
+
 // 页面加载时自动读取数据
 window.onload = function() {
+    loadJSON()
     loadFormData();
     calculateBMI();
     calculateScores();
