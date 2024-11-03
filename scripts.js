@@ -21,6 +21,7 @@ function calculateBMI(){
     } else {
         document.getElementById('bmiResult').textContent = '0';
     }
+    calculateScores();
 }
 
 function calculateScores(){
@@ -107,7 +108,21 @@ function calculateScores(){
             break;
         }
     }
+    // 计算长跑额外加分
+    const extra_data = data.extra_points;
+    const extra_run = document.getElementById('gender').value === 'male' ? extra_data['1000m'] : extra_data['800m'];
+    const extra_up = document.getElementById('gender').value === 'male' ? extra_data.pull_ups : extra_data.sit_ups;
+    if(input_run < 195) {
+        const extra_time = 195 - input_run;
+        for (let i = 0; i < extra_run.length; i++) {
+            if(extra_time >= extra_run[i].time_reduction) {
+                score_run += extra_run[i].extra_score;
+                break;
+            }
+        }
+    }
     output_run.textContent = `${score_run}`;
+
 
     // 计算引体向上/仰卧起坐得分
     for (let i = 0; i < event_up.length; i++) {
@@ -116,6 +131,17 @@ function calculateScores(){
         if (input_up >= event.count) {
             score_up = event.score;
             break;
+        }
+    }
+    // 计算额外加分
+    const full_count = document.getElementById('gender').value === 'male' ? 20 : 57;
+    if (input_up > full_count) {
+        const extra_count = input_up - full_count;
+        for (let i = 0; i < extra_up.length; i++) {
+            if (extra_count >= extra_up[i].count) {
+                score_up += extra_up[i].extra_score;
+                break;
+            }
         }
     }
     output_up.textContent = `${score_up}`;
@@ -133,6 +159,8 @@ function calculateScores(){
         }
     }
     let score_all = score_run * 0.2 + score_50m * 0.2 + score_up * 0.1 + score_jump * 0.1 +score_vital * 0.15 + score_reach * 0.1 + score_bmi * 0.15
+    if (score_all > 100)
+        score_all = 100;
     outputElement.textContent = `${score_all}`;
     saveFormData();
 }
@@ -194,8 +222,6 @@ loadJSON()
 
 // 页面加载时自动读取数据
 window.onload = function() {
-    loadJSON()
     loadFormData();
     calculateBMI();
-    calculateScores();
 };
