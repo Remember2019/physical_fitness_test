@@ -21,7 +21,7 @@ function calculateBMI(){
     } else {
         document.getElementById('bmiResult').textContent = '0';
     }
-    calculateScores();
+    setTimeout(calculateScores, 200);
 }
 
 function calculateScores(){
@@ -223,5 +223,5 @@ loadJSON()
 // 页面加载时自动读取数据
 window.onload = function() {
     loadFormData();
-    calculateBMI();
+    setTimeout(calculateBMI,100);
 };
